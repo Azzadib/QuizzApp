@@ -1,28 +1,26 @@
 package com.adib.eurekatest
 
-import android.graphics.Color
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.TextView
 
 class ResultActivity : AppCompatActivity() {
-    private lateinit var firstSpinner: Spinner
-    private lateinit var secondSpinner: Spinner
-    private lateinit var thirdSpinner: Spinner
-    private lateinit var fourthSpinner: Spinner
-    private lateinit var fifthSpinner: Spinner
+    private lateinit var firstSelected: TextView
+    private lateinit var secondSelected: TextView
+    private lateinit var thirdSelected: TextView
+    private lateinit var fourthSelected: TextView
+    private lateinit var fifthSelected: TextView
+    private lateinit var firstCorrect: TextView
+    private lateinit var secondCorrect: TextView
+    private lateinit var thirdCorrect: TextView
+    private lateinit var fourthCorrect: TextView
+    private lateinit var fifthCorrect: TextView
 
-    var firstArray = arrayOf(intent.getStringExtra(FIRST_SELECTED), intent.getStringExtra(
-        FIRST_CORRECT))
-    var secondArray = arrayOf(intent.getStringExtra(SECOND_SELECTED), intent.getStringExtra(
-        SECOND_CORRECT))
-    var thirdArray = arrayOf(intent.getStringExtra(THIRD_SELECTED), intent.getStringExtra(
-        THIRD_CORRECT))
-    var fourthArray = arrayOf(intent.getStringExtra(FOURTH_SELECTED), intent.getStringExtra(
-        FOURTH_CORRECT))
-    var fifthArray = arrayOf(intent.getStringExtra(FIFTH_SELECTED), intent.getStringExtra(
-        FIFTH_CORRECT))
+    private lateinit var tvScore: TextView
+    private lateinit var tvRight: TextView
+    private lateinit var tvWrong: TextView
+
     companion object{
         const val FIRST_SELECTED = "FIRST_SELECTED"
         const val FIRST_CORRECT = "FIRST_CORRECT"
@@ -34,44 +32,49 @@ class ResultActivity : AppCompatActivity() {
         const val FOURTH_CORRECT = "FOURTH_CORRECT"
         const val FIFTH_SELECTED = "FIFTH_SELECTED"
         const val FIFTH_CORRECT = "FIFTH_CORRECT"
+
+        const val SCORE = "SCORE"
+        const val RIGHT = "RIGHT"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        firstSpinner = findViewById(R.id.first)
-        secondSpinner = findViewById(R.id.second)
-        thirdSpinner = findViewById(R.id.third)
-        fourthSpinner = findViewById(R.id.fourth)
-        fifthSpinner = findViewById(R.id.fifth)
+        firstSelected = findViewById(R.id.first_selected)
+        firstCorrect = findViewById(R.id.first_correct)
+        secondSelected = findViewById(R.id.second_selected)
+        secondCorrect = findViewById(R.id.second_correct)
+        thirdSelected = findViewById(R.id.third_selected)
+        thirdCorrect = findViewById(R.id.third_correct)
+        fourthSelected = findViewById(R.id.fourth_selected)
+        fourthCorrect = findViewById(R.id.fourth_correct)
+        fifthSelected = findViewById(R.id.fifth_selected)
+        fifthCorrect = findViewById(R.id.fifth_correct)
 
-        val firstAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, firstArray)
-        val secondAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, secondArray)
-        val thirdAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, thirdArray)
-        val fourthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fourthArray)
-        val fifthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fifthArray)
+        tvScore = findViewById(R.id.tv_score)
+        tvRight = findViewById(R.id.tv_right)
+        tvWrong = findViewById(R.id.tv_wrong)
 
-        firstAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        secondAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        thirdAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        fourthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        fifthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        firstSelected.text = intent.getStringExtra(FIRST_SELECTED)
+        firstCorrect.text = intent.getStringExtra(FIRST_CORRECT)
+        secondSelected.text = intent.getStringExtra(SECOND_SELECTED)
+        secondCorrect.text = intent.getStringExtra(SECOND_CORRECT)
+        thirdSelected.text = intent.getStringExtra(THIRD_SELECTED)
+        thirdCorrect.text = intent.getStringExtra(THIRD_CORRECT)
+        fourthSelected.text = intent.getStringExtra(FOURTH_SELECTED)
+        fourthCorrect.text = intent.getStringExtra(FOURTH_CORRECT)
+        fifthSelected.text = intent.getStringExtra(FIFTH_SELECTED)
+        fifthCorrect.text = intent.getStringExtra(FIFTH_CORRECT)
 
-        firstSpinner.adapter = firstAdapter
-        secondSpinner.adapter = secondAdapter
-        thirdSpinner.adapter = thirdAdapter
-        fourthSpinner.adapter = fourthAdapter
-        fifthSpinner.adapter = fifthAdapter
+        tvScore.text = intent.getIntExtra(SCORE, 0).toString()
+        tvRight.text = intent.getIntExtra(RIGHT,0).toString()
+        tvWrong.text = (5 - intent.getIntExtra(RIGHT,0)).toString()
+    }
 
-        if (intent.getStringExtra(FIRST_CORRECT) == "") firstSpinner.setBackgroundColor(Color.parseColor("#FF0000"))
-        else firstSpinner.setBackgroundColor(Color.parseColor("#07DA63"))
-        if (intent.getStringExtra(SECOND_CORRECT) == "") secondSpinner.setBackgroundColor(Color.parseColor("#FF0000"))
-        else secondSpinner.setBackgroundColor(Color.parseColor("#07DA63"))
-        if (intent.getStringExtra(THIRD_CORRECT) == "") thirdSpinner.setBackgroundColor(Color.parseColor("#FF0000"))
-        else thirdSpinner.setBackgroundColor(Color.parseColor("#07DA63"))
-        if (intent.getStringExtra(FOURTH_CORRECT) == "") fourthSpinner.setBackgroundColor(Color.parseColor("#FF0000"))
-        else fourthSpinner.setBackgroundColor(Color.parseColor("#07DA63"))
-        if (intent.getStringExtra(FIFTH_CORRECT) == "") fifthSpinner.setBackgroundColor(Color.parseColor("#FF0000"))
-        else fifthSpinner.setBackgroundColor(Color.parseColor("#07DA63"))
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val home = Intent(this@ResultActivity, MainActivity::class.java)
+        startActivity(home)
     }
 }

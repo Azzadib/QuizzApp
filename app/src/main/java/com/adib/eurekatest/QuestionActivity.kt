@@ -5,6 +5,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,6 +18,16 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class QuestionActivity : AppCompatActivity(), Communicator {
+    companion object {
+        var timeLeft = 0L
+        const val SELECTED_CATEGORY_ID = "SELECTED_CATEGORY_ID"
+        const val SELECTED_CATEGORY_NAME = "SELECTED CATEGORY_NAME"
+        var categorySelected = 0
+        private var tabLayout: TabLayout? = null
+        var viewPager: ViewPager? = null
+    }
+    private lateinit var items: ArrayList<Question>
+
     private lateinit var tvCategorySelected: TextView
     private lateinit var information: LinearLayout
     private lateinit var tvQuestionCount: TextView
@@ -50,15 +61,7 @@ class QuestionActivity : AppCompatActivity(), Communicator {
     private var fifthQuestionCorrect:Int = 0
     private var fifthSelected: String = ""
     private var fifthCorrect: String = ""
-    companion object {
-        var timeLeft = 0L
-        const val SELECTED_CATEGORY_ID = "SELECTED_CATEGORY_ID"
-        const val SELECTED_CATEGORY_NAME = "SELECTED CATEGORY_NAME"
-        var categorySelected = 0
 
-        private var tabLayout: TabLayout? = null
-        var viewPager: ViewPager? = null
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
@@ -77,35 +80,11 @@ class QuestionActivity : AppCompatActivity(), Communicator {
         categorySelected = intent.getIntExtra(SELECTED_CATEGORY_ID, 0)
 
         fabDone.setOnClickListener {
-            correct = firstQuestionCorrect + secondQuestionCorrect + thirdQuestionCorrect + fourthQuestionCorrect + fifthQuestionCorrect
-            score = correct * 2
-            if (score >= 6) passed = 1
-            Toast.makeText(this, "Score: $score", Toast.LENGTH_SHORT).show()
-            if (getResult().size > 0) {
-                updateResultRecord()
-            }
-            else {
-                addResultRecord()
-            }
-            countDownTimer.cancel()
-            score = 0
-            correct = 0
-            passed = 0
-            val showResult = Intent(this@QuestionActivity, ResultActivity::class.java)
-            showResult.putExtra(ResultActivity.FIRST_SELECTED, firstSelected)
-            showResult.putExtra(ResultActivity.FIRST_CORRECT, firstCorrect)
-            showResult.putExtra(ResultActivity.SECOND_SELECTED, secondSelected)
-            showResult.putExtra(ResultActivity.SECOND_CORRECT, secondCorrect)
-            showResult.putExtra(ResultActivity.THIRD_SELECTED, thirdSelected)
-            showResult.putExtra(ResultActivity.THIRD_CORRECT, thirdCorrect)
-            showResult.putExtra(ResultActivity.FOURTH_SELECTED, fourthSelected)
-            showResult.putExtra(ResultActivity.FOURTH_CORRECT, fourthCorrect)
-            showResult.putExtra(ResultActivity.FIFTH_SELECTED, fifthSelected)
-            showResult.putExtra(ResultActivity.FIFTH_CORRECT, fifthCorrect)
-            startActivity(showResult)
+            finishQuiz()
         }
 
-        if(getQuestions().size > 0) {
+        items = getQuestions()
+        if(items.size > 0) {
             timeLeft = 120000L
             startTimer(timeLeft)
             tabLayout!!.addTab(tabLayout!!.newTab().setText("Soal 1"))
@@ -115,7 +94,7 @@ class QuestionActivity : AppCompatActivity(), Communicator {
             tabLayout!!.addTab(tabLayout!!.newTab().setText("Soal 5"))
             tabLayout!!.tabGravity = GRAVITY_FILL
 
-            val adapter = ViewPagerAdapter(this, supportFragmentManager, tabLayout!!.tabCount, getQuestions())
+            val adapter = ViewPagerAdapter(this, supportFragmentManager, tabLayout!!.tabCount, items)
             viewPager!!.adapter = adapter
 
             viewPager!!.addOnPageChangeListener(TabLayoutOnPageChangeListener(tabLayout))
@@ -148,73 +127,122 @@ class QuestionActivity : AppCompatActivity(), Communicator {
             fabDone.visibility = View.GONE
             tvNoQuestionAvailable.visibility = View.VISIBLE
         }
-
     }
 
-    override fun checkOne(
-        answeredOne: Int,
-        correctOne: Int,
-        oneAnswered: String,
-        oneCorrect: String
-    ) {
-        firstQuestionAnswered = answeredOne
-        firstQuestionCorrect = correctOne
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (items.size > 0) finishQuiz()
+    }
+
+    override fun checkOne(oneAnswered: String) {
         firstSelected = oneAnswered
-        firstCorrect = oneCorrect
+        when(firstSelected) {
+            items[0].correctAnswer -> {
+                firstQuestionAnswered = 1
+                firstQuestionCorrect = 1
+                firstCorrect = ""
+            }
+            "" -> {
+                firstQuestionAnswered = 0
+                firstQuestionCorrect = 0
+                firstCorrect = items[0].correctAnswer
+            }
+            else -> {
+                firstQuestionAnswered = 1
+                firstQuestionCorrect = 0
+                firstCorrect = items[0].correctAnswer
+            }
+        }
     }
 
-    override fun checkTwo(
-        answeredTwo: Int,
-        correctTwo: Int,
-        twoAnswered: String,
-        twoCorrect: String
-    ) {
-        secondQuestionAnswered =  answeredTwo
-        secondQuestionCorrect = correctTwo
+    override fun checkTwo(twoAnswered: String) {
         secondSelected = twoAnswered
-        secondCorrect = twoCorrect
+        when(secondSelected) {
+            items[1].correctAnswer -> {
+                secondQuestionAnswered = 1
+                secondQuestionCorrect = 1
+                secondCorrect = ""
+            }
+            "" -> {
+                secondQuestionAnswered = 0
+                secondQuestionCorrect = 0
+                secondCorrect = items[1].correctAnswer
+            }
+            else -> {
+                secondQuestionAnswered = 1
+                secondQuestionCorrect = 0
+                secondCorrect = items[1].correctAnswer
+            }
+        }
+
     }
 
-    override fun checkThree(
-        answeredThree: Int,
-        correctThree: Int,
-        threeAnswered: String,
-        threeCorrect: String
-    ) {
-        thirdQuestionAnswered =  answeredThree
-        thirdQuestionCorrect = correctThree
+    override fun checkThree(threeAnswered: String) {
         thirdSelected = threeAnswered
-        thirdCorrect = threeCorrect
+        when(thirdSelected) {
+            items[2].correctAnswer -> {
+                thirdQuestionAnswered = 1
+                thirdQuestionCorrect = 1
+                thirdCorrect = ""
+            }
+            "" -> {
+                thirdQuestionAnswered = 0
+                thirdQuestionCorrect = 0
+                thirdCorrect = items[2].correctAnswer
+            }
+            else -> {
+                thirdQuestionAnswered = 1
+                thirdQuestionCorrect = 0
+                thirdCorrect = items[2].correctAnswer
+            }
+        }
     }
 
-    override fun checkFour(
-        answeredFour: Int,
-        correctFour: Int,
-        fourAnswered: String,
-        fourCorrect: String
-    ) {
-        fourthQuestionAnswered =  answeredFour
-        fourthQuestionCorrect = correctFour
+    override fun checkFour(fourAnswered: String) {
         fourthSelected = fourAnswered
-        fourthCorrect = fourCorrect
+        when(fourthSelected) {
+            items[3].correctAnswer -> {
+                fourthQuestionAnswered = 1
+                fourthQuestionCorrect = 1
+                fourthCorrect = ""
+            }
+            "" -> {
+                fourthQuestionAnswered = 0
+                fourthQuestionCorrect = 0
+                fourthCorrect = items[3].correctAnswer
+            }
+            else -> {
+                fourthQuestionAnswered = 1
+                fourthQuestionCorrect = 0
+                fourthCorrect = items[3].correctAnswer
+            }
+        }
     }
-    override fun checkFive(
-        answeredFive: Int,
-        correctFive: Int,
-        fiveAnswered: String,
-        fiveCorrect: String
-    ) {
-        fifthQuestionAnswered = answeredFive
-        fifthQuestionCorrect = correctFive
+    override fun checkFive(fiveAnswered: String) {
         fifthSelected = fiveAnswered
-        fifthCorrect = fiveCorrect
+        when(fifthSelected) {
+            items[4].correctAnswer -> {
+                fifthQuestionAnswered = 1
+                fifthQuestionCorrect = 1
+                fifthCorrect = ""
+            }
+            "" -> {
+                fifthQuestionAnswered = 0
+                fifthQuestionCorrect = 0
+                fifthCorrect = items[4].correctAnswer
+            }
+            else -> {
+                fifthQuestionAnswered = 1
+                fifthQuestionCorrect = 0
+                fifthCorrect = items[4].correctAnswer
+            }
+        }
     }
 
     private fun startTimer(time_left: Long) {
         countDownTimer = object: CountDownTimer(time_left, 1000) {
             override fun onFinish() {
-                val home = Intent(this@QuestionActivity, MainActivity::class.java)
-                startActivity(home)
+                finishQuiz()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -241,47 +269,40 @@ class QuestionActivity : AppCompatActivity(), Communicator {
         return databaseHandler.viewQuestion(categorySelected)
     }
 
-    private fun getResult(): ArrayList<Result> {
-        val databaseHandler = DatabaseHandler(this)
-        return databaseHandler.viewResult(categorySelected)
-    }
-
-    private fun addResultRecord(): Long {
-        val result = Result()
-        val databaseHandler = DatabaseHandler(this)
-        result.passed = passed
-        result.resultCategoryId = categorySelected
-        result.score = score
-        return databaseHandler.addResult(result)
-    }
-
-    private fun updateResultRecord(): Int {
-        val result = Result()
-        val databaseHandler = DatabaseHandler(this)
-        result.passed = passed
-        result.resultCategoryId = categorySelected
-        result.score = score
-
-        return databaseHandler.updateResult(result)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (getQuestions().size > 0) {
-            countDownTimer.cancel()
-            correct = 0
-            score = 0
-            val home = Intent(this@QuestionActivity, MainActivity::class.java)
-            startActivity(home)
-
-        }
+    private fun finishQuiz() {
+        if (thirdSelected == "") checkThree("")
+        if (fourthSelected == "") checkFour("")
+        if (fifthSelected == "") checkFive("")
+        correct = firstQuestionCorrect + secondQuestionCorrect + thirdQuestionCorrect + fourthQuestionCorrect + fifthQuestionCorrect
+        score = correct * 2
+        if (score >= 6) passed = 1
+        Toast.makeText(this, "Score: $score", Toast.LENGTH_SHORT).show()
+        val showResult = Intent(this@QuestionActivity, ResultActivity::class.java)
+        Log.d("TAG", "result is $firstSelected")
+        showResult.putExtra(ResultActivity.FIRST_SELECTED, firstSelected)
+        showResult.putExtra(ResultActivity.FIRST_CORRECT, firstCorrect)
+        showResult.putExtra(ResultActivity.SECOND_SELECTED, secondSelected)
+        showResult.putExtra(ResultActivity.SECOND_CORRECT, secondCorrect)
+        showResult.putExtra(ResultActivity.THIRD_SELECTED, thirdSelected)
+        showResult.putExtra(ResultActivity.THIRD_CORRECT, thirdCorrect)
+        showResult.putExtra(ResultActivity.FOURTH_SELECTED, fourthSelected)
+        showResult.putExtra(ResultActivity.FOURTH_CORRECT, fourthCorrect)
+        showResult.putExtra(ResultActivity.FIFTH_SELECTED, fifthSelected)
+        showResult.putExtra(ResultActivity.FIFTH_CORRECT, fifthCorrect)
+        showResult.putExtra(ResultActivity.SCORE, score)
+        showResult.putExtra(ResultActivity.RIGHT, correct)
+        startActivity(showResult)
+        countDownTimer.cancel()
+        score = 0
+        correct = 0
+        passed = 0
     }
 }
 
 interface Communicator {
-    fun checkOne(answeredOne: Int, correctOne: Int, oneAnswered: String, oneCorrect: String)
-    fun checkTwo(answeredTwo: Int, correctTwo:Int, twoAnswered: String, twoCorrect: String)
-    fun checkThree(answeredThree: Int, correctThree: Int, threeAnswered: String, threeCorrect: String)
-    fun checkFour(answeredFour: Int, correctFour: Int, fourAnswered: String, fourCorrect: String)
-    fun checkFive(answeredFive: Int, correctFive: Int, fiveAnswered: String, oneCorrect: String)
+    fun checkOne(oneAnswered: String)
+    fun checkTwo(twoAnswered: String)
+    fun checkThree(threeAnswered: String)
+    fun checkFour(fourAnswered: String)
+    fun checkFive(fiveAnswered: String)
 }

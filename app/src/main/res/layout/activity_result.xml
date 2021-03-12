@@ -8,7 +8,7 @@
     tools:context=".ResultActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tv_result"
             android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="16dp"
             android:padding="4dp"
-            android:text="Result"
+            android:text="@string/result"
             android:textColor="@color/black"
             android:textSize="30sp"/>
         <LinearLayout
@@ -42,10 +42,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Score: "
+                        android:text="@string/score"
                         android:textColor="@color/white"/>
                     <TextView
-                        android:id="@+id/tv_question_count"
+                        android:id="@+id/tv_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -75,7 +75,7 @@
                         android:text="Benar: "
                         android:textColor="@color/white"/>
                     <TextView
-                        android:id="@+id/tv_result_right"
+                        android:id="@+id/tv_right"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -108,7 +108,7 @@
                         android:text="Salah: "
                         android:textColor="@color/white"/>
                     <TextView
-                        android:id="@+id/tv_time_left"
+                        android:id="@+id/tv_wrong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -123,34 +123,65 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-        <LinearLayout
+        <TextView
+            android:id="@+id/first_selected"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/information"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:layout_marginTop="16dp"
-            android:padding="8dp">
-            <Spinner
-                android:id="@+id/first"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Spinner
-                android:id="@+id/second"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Spinner
-                android:id="@+id/third"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Spinner
-                android:id="@+id/fourth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Spinner
-                android:id="@+id/fifth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:text="first"
+            app:layout_constraintTop_toBottomOf="@+id/information"/>
+        <TextView
+            android:id="@+id/first_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="first"
+            app:layout_constraintTop_toBottomOf="@+id/first_selected"/>
+        <TextView
+            android:id="@+id/second_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="second"
+            app:layout_constraintTop_toBottomOf="@+id/first_correct"/>
+        <TextView
+            android:id="@+id/second_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="second"
+            app:layout_constraintTop_toBottomOf="@+id/second_selected"/>
+        <TextView
+            android:id="@+id/third_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="third"
+            app:layout_constraintTop_toBottomOf="@+id/second_correct"/>
+        <TextView
+            android:id="@+id/third_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="third"
+            app:layout_constraintTop_toBottomOf="@+id/third_selected"/>
+        <TextView
+            android:id="@+id/fourth_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fourth"
+            app:layout_constraintTop_toBottomOf="@+id/third_correct"/>
+        <TextView
+            android:id="@+id/fourth_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fiourth"
+            app:layout_constraintTop_toBottomOf="@+id/fourth_selected"/>
+        <TextView
+            android:id="@+id/fifth_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fifth"
+            app:layout_constraintTop_toBottomOf="@+id/fourth_correct"/>
+        <TextView
+            android:id="@+id/fifth_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fifth"
+            app:layout_constraintTop_toBottomOf="@+id/fifth_selected"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

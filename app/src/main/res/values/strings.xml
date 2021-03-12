@@ -9,4 +9,6 @@
     <string name="zero_value">0</string>
     <string name="sisa_waktu">Sisa waktu: </string>
     <string name="no_question_available">No Question Available</string>
+    <string name="result">Result</string>
+    <string name="score">Score:</string>
 </resources>

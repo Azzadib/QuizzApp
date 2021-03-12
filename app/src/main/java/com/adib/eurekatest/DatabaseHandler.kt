@@ -1,6 +1,5 @@
 package com.adib.eurekatest
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.SQLException
@@ -28,12 +27,6 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         private const val CORRECT_ANSWER = "correctAnswer"
         private const val IS_IMAGE_QUESTION =  "isImageQuestion"
         private const val QUESTION_CATEGORY_ID = "categoryId"
-
-        private const val TABLE_RESULT = "ResultTable"
-        private const val RESULT_ID = "rId"
-        private const val PASSED = "passed"
-        private const val RESULT_CATEGORY_ID = "resultCategoryId"
-        private const val SCORE = "score"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -76,11 +69,6 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db?.execSQL("INSERT INTO $TABLE_QUESTION($QUESTION_TEXT, $ANSWER_A, $ANSWER_B, $ANSWER_C, $ANSWER_D, $CORRECT_ANSWER, $IS_IMAGE_QUESTION, $QUESTION_CATEGORY_ID) VALUES('This is multi choice question 4','Wrong Answer','Right Answer','Right Answer','Wrong Answer','Right Answer',0,3)")
         db?.execSQL("INSERT INTO $TABLE_QUESTION($QUESTION_TEXT, $ANSWER_A, $ANSWER_B, $ANSWER_C, $ANSWER_D, $CORRECT_ANSWER, $IS_IMAGE_QUESTION, $QUESTION_CATEGORY_ID) VALUES('This is multi choice question 5','Wrong Answer','Right Answer','Wrong Answer','Right Answer','Right Answer',0,3)")
         db?.execSQL("INSERT INTO $TABLE_QUESTION($QUESTION_TEXT, $ANSWER_A, $ANSWER_B, $ANSWER_C, $ANSWER_D, $CORRECT_ANSWER, $IS_IMAGE_QUESTION, $QUESTION_CATEGORY_ID) VALUES('This is multi choice question 6','Wrong Answer','Wrong Answer','Right Answer','Right Answer','Right Answer',0,3)")
-
-        val createResultTable = ("CREATE TABLE " + TABLE_RESULT + "("
-                + RESULT_ID + " INTEGER PRIMARY KEY, " + PASSED + " INTEGER, "
-                + RESULT_CATEGORY_ID + " INTEGER, " + SCORE + " INTEGER)")
-        db?.execSQL(createResultTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -166,64 +154,5 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
         cursor.close()
         return questionList
-    }
-
-    fun viewResult(getResultCategoryId: Int): ArrayList<Result> {
-        val quizResult = ArrayList<Result>()
-        val resultQuery = "SELECT * FROM $TABLE_RESULT WHERE $RESULT_CATEGORY_ID=$getResultCategoryId"
-        val db = this.readableDatabase
-        val cursor: Cursor
-        try {
-            cursor = db.rawQuery(resultQuery, null)
-        } catch (e: SQLException) {
-            db.execSQL(resultQuery)
-            return ArrayList()
-        }
-
-        var rId: Int
-        var passed: Int
-        var resultCategoryId: Int
-        var score: Int
-
-        if (cursor.moveToFirst()) {
-            do {
-                rId = cursor.getInt(cursor.getColumnIndex(RESULT_ID))
-                passed = cursor.getInt(cursor.getColumnIndex(PASSED))
-                resultCategoryId = cursor.getInt(cursor.getColumnIndex(RESULT_CATEGORY_ID))
-                score = cursor.getInt(cursor.getColumnIndex(SCORE))
-
-                val eachResult = Result(rId=rId, passed=passed, resultCategoryId=resultCategoryId,
-                        score=score)
-                quizResult.add(eachResult)
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        return  quizResult
-    }
-
-    fun addResult(result: Result): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(RESULT_ID, result.rId)
-        contentValues.put(PASSED, result.passed)
-        contentValues.put(RESULT_CATEGORY_ID, result.resultCategoryId)
-        contentValues.put(SCORE, result.score)
-
-        val success = db.insert(TABLE_RESULT, null, contentValues)
-        db.close()
-        return success
-    }
-
-    fun updateResult(result: Result): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(RESULT_ID, result.rId)
-        contentValues.put(PASSED, result.passed)
-        contentValues.put(RESULT_CATEGORY_ID, result.resultCategoryId)
-        contentValues.put(SCORE, result.score)
-
-        val success = db.update(TABLE_RESULT, contentValues, "resultCategoryId=" + result.resultCategoryId, null)
-        db.close()
-        return success
     }
 }

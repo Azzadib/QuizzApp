@@ -18,8 +18,9 @@ class FifthQuestion(val item: Question): Fragment() {
     private lateinit var rbAnswerB: RadioButton
     private lateinit var rbAnswerC: RadioButton
     private lateinit var rbAnswerD: RadioButton
-    private lateinit var selectedAnswer: String
+    private var selectedAnswer: String = ""
     lateinit var com: Communicator
+    private var isChecked = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +56,7 @@ class FifthQuestion(val item: Question): Fragment() {
 
         rgQuestion = view.findViewById(R.id.rg_question)
         rgQuestion.setOnCheckedChangeListener{ _, checkedId ->
+            isChecked = 1
             when(checkedId) {
                 R.id.rb_answer_a ->
                     selectedAnswer = item.answerA
@@ -67,6 +69,7 @@ class FifthQuestion(val item: Question): Fragment() {
             }
             showResult(selectedAnswer)
         }
+        if (isChecked == 0) com.checkFive("")
     }
 
     override fun onAttach(context: Context) {
@@ -75,7 +78,7 @@ class FifthQuestion(val item: Question): Fragment() {
     }
 
     private fun showResult(answer: String) {
-        if (answer == item.correctAnswer) com.checkOne(1, 1, answer, " ")
-        else com.checkOne(1,0, answer, item.correctAnswer)
+        if (answer == item.correctAnswer) com.checkFive(answer)
+        else com.checkFive(answer)
     }
 }
