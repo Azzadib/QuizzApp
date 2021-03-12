@@ -123,65 +123,13 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-        <TextView
-            android:id="@+id/first_selected"
+        <ExpandableListView
+            android:id="@+id/expandable_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="first"
-            app:layout_constraintTop_toBottomOf="@+id/information"/>
-        <TextView
-            android:id="@+id/first_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="first"
-            app:layout_constraintTop_toBottomOf="@+id/first_selected"/>
-        <TextView
-            android:id="@+id/second_selected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="second"
-            app:layout_constraintTop_toBottomOf="@+id/first_correct"/>
-        <TextView
-            android:id="@+id/second_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="second"
-            app:layout_constraintTop_toBottomOf="@+id/second_selected"/>
-        <TextView
-            android:id="@+id/third_selected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="third"
-            app:layout_constraintTop_toBottomOf="@+id/second_correct"/>
-        <TextView
-            android:id="@+id/third_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="third"
-            app:layout_constraintTop_toBottomOf="@+id/third_selected"/>
-        <TextView
-            android:id="@+id/fourth_selected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="fourth"
-            app:layout_constraintTop_toBottomOf="@+id/third_correct"/>
-        <TextView
-            android:id="@+id/fourth_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="fiourth"
-            app:layout_constraintTop_toBottomOf="@+id/fourth_selected"/>
-        <TextView
-            android:id="@+id/fifth_selected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="fifth"
-            app:layout_constraintTop_toBottomOf="@+id/fourth_correct"/>
-        <TextView
-            android:id="@+id/fifth_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="fifth"
-            app:layout_constraintTop_toBottomOf="@+id/fifth_selected"/>
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/information"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -129,7 +129,6 @@ class QuestionActivity : AppCompatActivity(), Communicator {
         }
     }
 
-    //prevent leave the quiz
     override fun onBackPressed() {
         if (items.size > 0) Toast.makeText(this, "Finish the quiz first", Toast.LENGTH_SHORT).show()
         else super.onBackPressed()
