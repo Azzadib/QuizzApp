@@ -130,8 +130,8 @@ class QuestionActivity : AppCompatActivity(), Communicator {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        if (items.size > 0) finishQuiz()
+        if (items.size > 0) Toast.makeText(this, "Finish the quiz first", Toast.LENGTH_SHORT).show()
+        else super.onBackPressed()
     }
 
     override fun checkOne(oneAnswered: String) {
