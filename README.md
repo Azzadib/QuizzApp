@@ -1,3 +1,3 @@
 # Eureka Test
 
-Quiz App
+Quiz App Example. Have category and timer fiture.
